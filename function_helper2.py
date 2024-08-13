@@ -198,7 +198,7 @@ def kbest_evaluate_features(X, y,
     return result_df
 
 ##########################################################################################################
-def rfe_evaluate_features(X, y, model, task='classification'):
+def rfe_evaluate_features(X, y, model, task='classification', test_size=0.3, random_state=42):
     """
     Evaluates the performance of a model using Recursive Feature Elimination (RFE) for different numbers
     of features. This function performs feature selection for varying values of `k`, trains the model, and calculates
