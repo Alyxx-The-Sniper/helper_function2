@@ -248,10 +248,11 @@ def rfe_evaluate_features(X, y, model, task='classification', test_size=0.3, ran
             score = accuracy_score(y_test, y_preds_rfe)
 
             # Optionally calculate AUC score for binary classification
-            if len(np.unique(y)) == 2:
-                y_probs_rfe = model.predict_proba(X_test_rfe)[:, 1]
-                auc_score_rfe = roc_auc_score(y_test, y_probs_rfe)
-                score = auc_score_rfe  # Use AUC score if it's available
+            # uncomment if need AUC score BINARY CLASSIFICATION 
+#             if len(np.unique(y)) == 2:
+#                 y_probs_rfe = model.predict_proba(X_test_rfe)[:, 1]
+#                 auc_score_rfe = roc_auc_score(y_test, y_probs_rfe)
+#                 score = auc_score_rfe  # Use AUC score if it's available
 
         elif task == 'regression':
             # Calculate MSE and R² score
