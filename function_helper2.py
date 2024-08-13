@@ -12,10 +12,9 @@ from sklearn.pipeline import Pipeline
 from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
 # kbest
 from sklearn.feature_selection import SelectKBest, f_classif, mutual_info_classif, f_regression
-from sklearn.metrics import accuracy_score, roc_auc_score
+from sklearn.metrics import accuracy_score, roc_auc_score, r2_score
 #RFE
 from sklearn.feature_selection import RFE
-from sklearn.metrics import accuracy_score, roc_auc_score
 #SFFS
 from mlxtend.feature_selection import SequentialFeatureSelector as SFS
 import warnings
