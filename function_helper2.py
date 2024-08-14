@@ -420,3 +420,64 @@ def replace_outliers_with_mean(df):
             df[col][lower_bound_outliers | upper_bound_outliers] = col_mean
 
     return df
+
+
+##########################################################################################################
+def evaluate_models(models, X_train, y_train, X_test, y_test):
+    """
+    Evaluate and compare models based on train and test performance for both classification and regression tasks.
+    
+    Parameters:
+    - models (dict): A dictionary where keys are model names and values are model instances.
+    - X_train (array-like): Features for the training set.
+    - y_train (array-like): Target labels for the training set.
+    - X_test (array-like): Features for the test set.
+    - y_test (array-like): Target labels for the test set.
+    
+    Returns:
+    - pd.DataFrame: A DataFrame with models, train performance, and test performance, sorted by test performance.
+    """
+    # Initialize a dictionary to hold results
+    results = {}
+
+    # Determine if the task is classification or regression based on the model
+    is_classification = any(hasattr(model, 'predict_proba') for model in models.values())
+
+    # Use tqdm to show progress for the model evaluation
+    for name, model in tqdm(models.items(), desc="Evaluating Models", unit="model"):
+        # Create a pipeline
+        pipeline = Pipeline([
+            ('scaler', StandardScaler()),
+            ('model', model)  # Use the model instance
+        ])
+        
+        # Fit the pipeline
+        pipeline.fit(X_train, y_train)
+        
+        # Predict and evaluate on train data
+        y_train_pred = pipeline.predict(X_train)
+        if is_classification:
+            train_score = accuracy_score(y_train, y_train_pred)
+        else:
+            train_score = r2_score(y_train, y_train_pred)
+        
+        # Predict and evaluate on test data
+        y_test_pred = pipeline.predict(X_test)
+        if is_classification:
+            test_score = accuracy_score(y_test, y_test_pred)
+        else:
+            test_score = r2_score(y_test, y_test_pred)
+        
+        # Store the results
+        results[name] = {
+            'Train Score': train_score,
+            'Test Score': test_score
+        }
+    
+    # Convert results to DataFrame
+    results_df = pd.DataFrame(results).T
+    
+    # Reorder columns to place 'Train Score' first
+    results_df = results_df[['Train Score', 'Test Score']].sort_values(by='Test Score', ascending=False)
+
+    return results_df
